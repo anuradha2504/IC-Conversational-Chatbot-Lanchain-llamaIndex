@@ -1,63 +1,140 @@
 import streamlit as st
-import requests
+import os
+from dotenv import load_dotenv
 
-# Streamlit App settings
-st.set_page_config(page_title="Conversational Chatbot", layout="centered")
-st.title("🤖 Conversational Chatbot")
+# LangChain Imports
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationChain
+from langchain_openai import ChatOpenAI
 
-# --- Securely load API key from Streamlit secrets ---
-OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY")
+# LlamaIndex Imports
+from llama_index.core import Settings
+from llama_index.llms.openai import OpenAI
+from llama_index.core.memory import ChatMemoryBuffer
+from llama_index.core.chat_engine import SimpleChatEngine
 
-if not OPENAI_API_KEY:
-    st.warning("⚠️ No API key found. Please set it in Streamlit Secrets.")
+
+# ---------------------------------------------------------
+# Load Environment / Secrets
+# ---------------------------------------------------------
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
+
+if not api_key:
+    st.error("❌ OpenAI API key not found in .env or Streamlit Secrets.")
+    st.stop()
+
+# ---------------------------------------------------------
+# Streamlit Page Config
+# ---------------------------------------------------------
+st.set_page_config(page_title="Multi-Model Chatbot", layout="centered")
+st.title("🤖 Multi-Model Chatbot (LangChain + LlamaIndex)")
+
+
+# ---------------------------------------------------------
+# Initialize Session State
+# ---------------------------------------------------------
+if "model" not in st.session_state:
+    st.session_state.model = "LangChain"
+
+if "langchain_chain" not in st.session_state:
+    st.session_state.langchain_chain = None
+
+if "llama_engine" not in st.session_state:
+    st.session_state.llama_engine = None
+
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+
+# ---------------------------------------------------------
+# LangChain Chatbot
+# ---------------------------------------------------------
+def get_langchain_bot():
+    if st.session_state.langchain_chain is None:
+        llm = ChatOpenAI(
+            model="gpt-3.5-turbo",
+            temperature=0.7,
+            openai_api_key=api_key
+        )
+        memory = ConversationBufferMemory()
+        st.session_state.langchain_chain = ConversationChain(
+            llm=llm,
+            memory=memory,
+            verbose=True
+        )
+    return st.session_state.langchain_chain
+
+
+# ---------------------------------------------------------
+# LlamaIndex Chatbot
+# ---------------------------------------------------------
+def get_llama_bot():
+    if st.session_state.llama_engine is None:
+        Settings.llm = OpenAI(
+            model="gpt-3.5-turbo",
+            temperature=0.7,
+            api_key=api_key
+        )
+        memory = ChatMemoryBuffer.from_defaults(token_limit=3000)
+        st.session_state.llama_engine = SimpleChatEngine.from_defaults(
+            llm=Settings.llm,
+            memory=memory
+        )
+    return st.session_state.llama_engine
+
+
+# ---------------------------------------------------------
+# Sidebar Model Selection
+# ---------------------------------------------------------
+model_choice = st.sidebar.selectbox(
+    "Choose Chat Model",
+    ["LangChain", "LlamaIndex"],
+)
+
+# Reset bot when model changes
+if model_choice != st.session_state.model:
+    st.session_state.model = model_choice
+    st.session_state.chat_history = []
+    st.session_state.langchain_chain = None
+    st.session_state.llama_engine = None
+
+
+st.write(f"### Active Model: `{st.session_state.model}`")
+
+
+# ---------------------------------------------------------
+# Chat Interface
+# ---------------------------------------------------------
+user_input = st.text_input("Enter your message:")
+
+if st.button("Send"):
+    if user_input.strip() == "":
+        st.warning("Please enter a message.")
+    else:
+        # Select Chat Engine
+        if st.session_state.model == "LangChain":
+            bot = get_langchain_bot()
+            response = bot.predict(input=user_input)
+
+        elif st.session_state.model == "LlamaIndex":
+            bot = get_llama_bot()
+            response = bot.chat(user_input)
+
+        # Store chat history
+        st.session_state.chat_history.append(("You", user_input))
+        st.session_state.chat_history.append(("Bot", str(response)))
+
+
+# ---------------------------------------------------------
+# Display Chat History
+# ---------------------------------------------------------
+st.write("### Chat History")
+if len(st.session_state.chat_history) == 0:
+    st.info("Start chatting...")
 else:
-    st.success("🗝️ API key loaded securely.")
-
-# Backend endpoints
-API_OPTIONS = {
-   # "LangChain": "http://localhost:8000/api/chat",
-    "LangChain": "http://localhost:8000/docs#/Chat/chat_api_chat_post",
-    "LlamaIndex": "http://localhost:8001/docs"
-}
-
-# Model selection
-selected_model = st.selectbox("Select Model Backend:", ["LangChain", "LlamaIndex"])
-api_url = API_OPTIONS[selected_model]
-
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "selected_model" not in st.session_state:
-    st.session_state.selected_model = selected_model
-elif st.session_state.selected_model != selected_model:
-    st.session_state.messages = []
-    st.session_state.selected_model = selected_model
-
-# Display chat history
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-# Chat input
-if prompt := st.chat_input("Type your message..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    try:
-        response = requests.post(api_url, json={"message": prompt})
-        if response.status_code == 200:
-            bot_reply = response.json().get("response", "⚠️ No response received.")
+    for sender, msg in st.session_state.chat_history:
+        if sender == "You":
+            st.markdown(f"**🧑 You:** {msg}")
         else:
-            bot_reply = f"Error {response.status_code}: {response.text}"
-    except Exception as e:
-        bot_reply = f"❌ Connection error: {e}"
-
-    with st.chat_message("assistant"):
-        st.markdown(bot_reply)
-
-    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
-
-
-
-
+            st.markdown(f"**🤖 Bot:** {msg}")
