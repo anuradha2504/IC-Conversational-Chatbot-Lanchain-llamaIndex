@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+langchain
+langchain-openai
+python-dotenv
+jinja2
+python-multipart
+llama-index
+llama-index-llms-openai
+
+# --- LangChain ecosystem ---
+langchain==0.3.7
+langchain-core==0.3.17
+langchain-community==0.3.7
+langchain-text-splitters==0.3.2
+langchain-openai==0.2.6
+langsmith==0.1.125
