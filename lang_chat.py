@@ -4,7 +4,18 @@ from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 from typing import Optional
+from typing import Optional
+import os
+from dotenv import load_dotenv
+import streamlit as st
 
+# Load environment variables (local) or Streamlit secrets (deployed)
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
+
+if not api_key:
+    raise ValueError("OpenAI API key not found in Streamlit Secrets or .env file.")
+    
 app = FastAPI(
     title="LangChain ChatBot API",
     description="A conversational AI chatbot using LangChain and OpenAI",
@@ -25,7 +36,7 @@ class OpenAIChatbot:
         self.llm = ChatOpenAI(
             model="gpt-3.5-turbo",
             temperature=0.7,
-            openai_api_key=""
+            openai_api_key=api_key           
         )
     
     def create_conversation(self) -> ConversationChain:
@@ -64,4 +75,5 @@ async def chat(chat_request: ChatRequest):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
