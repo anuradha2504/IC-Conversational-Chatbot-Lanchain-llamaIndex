@@ -15,8 +15,8 @@ else:
 
 # Backend endpoints
 API_OPTIONS = {
-   # "LangChain": "http://localhost:8000/api/chat",
-    "LangChain": "http://localhost:8000/docs#/Chat/chat_api_chat_post",
+    "LangChain": "http://localhost:8000/docs",
+    #"LangChain": "http://localhost:8000/docs#/Chat/chat_api_chat_post",
     "LlamaIndex": "http://localhost:8001/api/chat"
 }
 
@@ -57,4 +57,5 @@ if prompt := st.chat_input("Type your message..."):
         st.markdown(bot_reply)
 
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+
 
