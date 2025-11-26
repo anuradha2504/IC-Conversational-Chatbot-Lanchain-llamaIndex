@@ -5,6 +5,16 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.chat_engine import SimpleChatEngine
 from typing import Optional
+import os
+from dotenv import load_dotenv
+import streamlit as st
+
+# Load environment variables (local) or Streamlit secrets (on Streamlit Cloud)
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("OPENAI_API_KEY")
+
+if not api_key:
+    raise ValueError("OpenAI API key not found in Streamlit Secrets or .env file.")
 
 app = FastAPI(
     title="LlamaIndex ChatBot API",
@@ -65,4 +75,5 @@ async def chat(chat_request: ChatRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+    uvicorn.run(app, host="0.0.0.0", port=8001)
