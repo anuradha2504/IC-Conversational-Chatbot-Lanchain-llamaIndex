@@ -40,7 +40,7 @@ Supports:
 
 🏁 Live Demo
 🌍 Deployed Endpoint:
-https://ic-langchain-stremlit-fyhznguu85zbbvsjxs88nk.streamlit.app/
+https://gwsfmjbs9esxpuqkkxuecd.streamlit.app/
 
 🧠 Try both LangChain and LlamaIndex models from the dropdown in the UI.
 
