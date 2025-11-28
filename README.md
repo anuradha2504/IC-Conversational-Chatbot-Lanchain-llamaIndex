@@ -39,7 +39,7 @@ The application prioritizes secure handling of your OpenAI API keys, supporting:
 
 🏁 Live Demo
 🌍 Deployed Endpoint:
-https://gwsfmjbs9esxpuqkkxuecd.streamlit.app/
+https://conversational-chatbot-langchain-llamaindix.streamlit.app/
 
 🧠 Try both LangChain and LlamaIndex models from the dropdown in the UI.
 
