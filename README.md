@@ -1,59 +1,5 @@
 # 🤖 Multi-Model AI Chatbot (LangChain + LlamaIndex)
 
-This project is a **Streamlit-based conversational AI chatbot** that allows users to **switch dynamically between two powerful frameworks**:
-
-- **LangChain** (with OpenAI Chat Models)
-- **LlamaIndex** (SimpleChatEngine with memory)
-
-The chatbot includes **conversation memory**, **model switching**, and a clean chat UI — all powered from a single `app.py`.
-
----
-
-## 🚀 Features
-
-### 🔄 **Model Switching (Unique Feature)**
-Easily switch between:
-- **LangChain**
-- **LlamaIndex**
-
-Each model maintains **its own memory buffer**, and switching automatically resets conversation state.
-
-### 💬 **Full Chat Interface**
-- Chat UI in Streamlit  
-- Conversation history  
-- Dynamic responses  
-- Clean UI  
-
-### 🧠 **Memory Support**
-- LangChain → `ConversationBufferMemory`
-- LlamaIndex → `ChatMemoryBuffer`
-
-### 🔐 **Secure API Key Handling**
-Supports:
-- `.env` (local development)
-- `st.secrets` (Streamlit Cloud)
-
----
-
-## 🏗️ Project Architecture
-<img width="1536" height="1024" alt="image" src="https://github.com/anuradha2504/IC-Conversational-Chatbot-Lanchain-llamaIndex/blob/main/System-architecture-flow-Chatbot-Langchain-LlamaIndex.png" />
-
-🏁 Live Demo
-🌍 Deployed Endpoint:
-https://gwsfmjbs9esxpuqkkxuecd.streamlit.app/
-
-🧠 Try both LangChain and LlamaIndex models from the dropdown in the UI.
-
-📚 Example Output
-🔹 LangChain Chat
-<img width="1231" height="569" alt="image" src="https://github.com/user-attachments/assets/76663c08-e5d9-449b-9ddb-cc15a170f767" />
-
-🔹 LlamaIndex Chat
-<img width="1110" height="635" alt="image" src="https://github.com/user-attachments/assets/d4b270fc-12b4-4905-94a0-a5dee5f48cf3" />
-
-
-# 🤖 Multi-Model AI Chatbot (LangChain + LlamaIndex)
-
 This project is a Streamlit-based conversational AI chatbot that offers the unique ability to dynamically switch between two powerful Large Language Model (LLM) frameworks: LangChain and LlamaIndex. Designed for flexibility and a seamless user experience, it provides conversation memory, real-time model switching, and a clean, intuitive chat UI, all orchestrated from a single `app.py` file.
 
 ## 🚀 Features
@@ -86,11 +32,24 @@ The application prioritizes secure handling of your OpenAI API keys, supporting:
 * `st.secrets` for secure deployment on Streamlit Cloud.
 * `.env` files for local development, preventing API keys from being hardcoded or committed to version control.
 
-## ⚙️ System Design
+---
 
-The chatbot's architecture is designed for modularity and scalability, allowing for easy integration of different LLM frameworks and ensuring efficient communication between components.
+## 🏗️ Project Architecture
+<img width="1536" height="1024" alt="image" src="https://github.com/anuradha2504/IC-Conversational-Chatbot-Lanchain-llamaIndex/blob/main/System-architecture-flow-Chatbot-Langchain-LlamaIndex.png" />
 
-http://googleusercontent.com/image_generation_content/2
+🏁 Live Demo
+🌍 Deployed Endpoint:
+https://gwsfmjbs9esxpuqkkxuecd.streamlit.app/
+
+🧠 Try both LangChain and LlamaIndex models from the dropdown in the UI.
+
+📚 Example Output
+🔹 LangChain Chat
+<img width="1231" height="569" alt="image" src="https://github.com/user-attachments/assets/76663c08-e5d9-449b-9ddb-cc15a170f767" />
+
+🔹 LlamaIndex Chat
+<img width="1110" height="635" alt="image" src="https://github.com/user-attachments/assets/d4b270fc-12b4-4905-94a0-a5dee5f48cf3" />
+
 
 
 
