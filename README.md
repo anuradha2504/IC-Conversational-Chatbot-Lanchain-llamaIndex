@@ -36,7 +36,7 @@ Supports:
 ---
 
 ## 🏗️ Project Architecture
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/4d2b645b-9e50-48db-84df-2dde3edef3e3" />
+<img width="1536" height="1024" alt="image" src="https://github.com/anuradha2504/IC-Conversational-Chatbot-Lanchain-llamaIndex/blob/main/System-architecture-flow-Chatbot-Langchain-LlamaIndex.png" />
 
 🏁 Live Demo
 🌍 Deployed Endpoint:
